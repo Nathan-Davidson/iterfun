@@ -35,4 +35,17 @@ export class ArrayIter<T> implements Iter<T> {
 
     return this.arr[this.pos++];
   }
+
+  /**
+   * Returns the current element in the underyling Array. Throws RangeError if
+   * the iterator has reached the end of the Array.
+   * @return {T} the next element in the Array, if one exists.
+   */
+  current(): T {
+    if (!this.hasNext()) {
+      throw new RangeError();
+    }
+
+    return this.arr[this.pos];
+  }
 }

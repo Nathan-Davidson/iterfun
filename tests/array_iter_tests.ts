@@ -36,4 +36,18 @@ describe('ArrayIter tests', () => {
     const iter: Iter<number> = new ArrayIter(new Array<number>());
     expect(iter.next.bind(iter)).to.throw();
   });
+
+  it('does not advance when current is called', () => {
+    const iter: Iter<number> = new ArrayIter(sampleArr);
+
+    expect(iter.current()).to.equal(0);
+    expect(iter.current()).to.equal(0);
+  });
+
+  it('returns the appropriate element when current is called after next', () => {
+    const iter: Iter<number> = new ArrayIter(sampleArr);
+    iter.next();
+
+    expect(iter.current()).to.equal(1);
+  });
 });

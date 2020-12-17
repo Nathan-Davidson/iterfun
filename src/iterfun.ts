@@ -39,6 +39,10 @@ export function map<T1, T2>(iter: Iter<T1>, mapper: (arg: T1) => T2): Iter<T2> {
     next(): T2 {
       return mapper(iter.next());
     },
+
+    current(): T2 {
+      return mapper(iter.current());
+    },
   };
 }
 
