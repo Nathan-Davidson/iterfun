@@ -7,7 +7,6 @@ export class NoSuchElementError extends Error {}
  * Advances the iterator until it finds an element matching the provided
  * predicate, then returns that element. Theows NoSuchElementError if the end
  * of the iterator is reached without finding a matching element.
- * @template T
  * @param {Iter<T>} iter the iterator to find the element in.
  * @param {(T) => boolean} pred the predicate the element to find should
  * satisfy.
