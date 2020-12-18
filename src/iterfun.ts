@@ -22,6 +22,61 @@ export function find<T>(iter: Iter<T>, pred: (arg: T) => boolean): T {
 }
 
 /**
+ * Advances the provided iterator past each element that matches the provided
+ * predicate. If there are no elements that do not match, the iterator is
+ * returned in an empty state, but no exception is thrown.
+ * @param {Iter<T>} iter the iterator to drop elements from.
+ * @param {(T) => boolean} pred the predicate used to decide if an element
+ * should be dropped.
+ * @return {Iter<T>} the provided iterator, advanced to the first element that
+ * did not match pred.
+ */
+export function dropWhile<T>(
+  iter: Iter<T>,
+  pred: (arg: T) => boolean
+): Iter<T> {
+  while (iter.hasNext() && pred(iter.current())) iter.next();
+  return iter;
+}
+
+/**
+ * Returns an iterator that returns values from the provided iterator as long
+ * as they match the provided predicate. At the first element that does not
+ * match the predicate, the returned iterator will signal that it has
+ * terminated.
+ * @param {Iter<T>} iter the iterator to select elements from.
+ * @param {(T) => boolean} pred the predicate the elements should satisfy.
+ * @return {Iter<T>} an iterator that will return the elements from the
+ * provided iterator until it would return one which violates pred.
+ */
+export function keepWhile<T>(
+  iter: Iter<T>,
+  pred: (arg: T) => boolean
+): Iter<T> {
+  return {
+    hasNext(): boolean {
+      return pred(iter.current());
+    },
+
+    next(): T {
+      if (!pred(iter.current())) {
+        throw new RangeError();
+      }
+
+      return iter.next();
+    },
+
+    current(): T {
+      if (!pred(iter.current())) {
+        throw new RangeError();
+      }
+
+      return iter.current();
+    },
+  };
+}
+
+/**
  * Maps the provided function (mapper) over an iterator. Returns a new iterator
  * that yields the values of the original iterator, but modified by the mapper.
  * @param {Iter<T1>} iter the iterator to map over
