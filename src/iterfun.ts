@@ -8,7 +8,7 @@ export class NoSuchElementError extends Error {}
  * predicate, then returns that element. Theows NoSuchElementError if the end
  * of the iterator is reached without finding a matching element.
  * @param {Iter<T>} iter the iterator to find the element in.
- * @param {(T) => boolean} pred the predicate the element to find should
+ * @param {(arg: T) => boolean} pred the predicate the element to find should
  * satisfy.
  * @return {T} the first element returned by the iterator that satisfies the
  * predicate.
@@ -26,7 +26,7 @@ export function find<T>(iter: Iter<T>, pred: (arg: T) => boolean): T {
  * predicate. If there are no elements that do not match, the iterator is
  * returned in an empty state, but no exception is thrown.
  * @param {Iter<T>} iter the iterator to drop elements from.
- * @param {(T) => boolean} pred the predicate used to decide if an element
+ * @param {(arg: T) => boolean} pred the predicate used to decide if an element
  * should be dropped.
  * @return {Iter<T>} the provided iterator, advanced to the first element that
  * did not match pred.
@@ -45,7 +45,7 @@ export function dropWhile<T>(
  * match the predicate, the returned iterator will signal that it has
  * terminated.
  * @param {Iter<T>} iter the iterator to select elements from.
- * @param {(T) => boolean} pred the predicate the elements should satisfy.
+ * @param {(arg: T) => boolean} pred the predicate the elements should satisfy.
  * @return {Iter<T>} an iterator that will return the elements from the
  * provided iterator until it would return one which violates pred.
  */
