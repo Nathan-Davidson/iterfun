@@ -4,6 +4,47 @@ import {Iter} from './iter';
 export class NoSuchElementError extends Error {}
 
 /**
+ * Returns an iterator that yields only the elements in the provided iterator
+ * that match the specified predicate. Does not throw an exception even if no
+ * elements match.
+ * @param {Iter<T>} iter the iterator to filter.
+ * @param {(arg: T) => boolean} pred the predicate to filter by.
+ * @return {Iter<T>} an iterator tha returns the elements from the provided
+ * iterator that match the predicate.
+ */
+export function filter<T>(iter: Iter<T>, pred: (arg: T) => boolean): Iter<T> {
+  // dropWhile mutates the underlying iterator, so we don't need to save the
+  // returned value
+  dropWhile(iter, x => !pred(x));
+  return {
+    hasNext(): boolean {
+      return iter.hasNext();
+    },
+
+    next(): T {
+      if (!iter.hasNext()) {
+        throw new RangeError();
+      }
+
+      // next() is the only method that changes the iterator's state, so this
+      // is where we go into the underlying iterator and fast forward it past
+      // non-matching elements
+      const toReturn: T = iter.next();
+      dropWhile(iter, x => !pred(x));
+      return toReturn;
+    },
+
+    current(): T {
+      if (!iter.hasNext()) {
+        throw new RangeError();
+      }
+
+      return iter.current();
+    },
+  };
+}
+
+/**
  * Advances the iterator until it finds an element matching the provided
  * predicate, then returns that element. Theows NoSuchElementError if the end
  * of the iterator is reached without finding a matching element.

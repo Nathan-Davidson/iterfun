@@ -27,4 +27,11 @@ describe('dropWhile tests', () => {
   it('does not throw an exception if no values match', () => {
     expect(() => dropWhile(iter, x => x < 5)).not.to.throw();
   });
+
+  // filter depends on this behavior, this test ensures that it cannot silently
+  // break
+  it('advances the underlying iterator', () => {
+    dropWhile(iter, x => x < 3);
+    expect(iter.next()).to.equal(3);
+  });
 });
