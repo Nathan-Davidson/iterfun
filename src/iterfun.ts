@@ -4,6 +4,21 @@ import {Iter} from './iter';
 export class NoSuchElementError extends Error {}
 
 /**
+ * Returns a histogram of the frequencies of values in the input iterator.
+ * @param {Iter<T>} iter the iterator to count values in.
+ * @return {Map<T,number>} the frequencies of each value in the input iterator.
+ */
+export function counter<T>(iter: Iter<T>): Map<T, number> {
+  const histo: Map<T, number> = new Map();
+  while (iter.hasNext()) {
+    const curr: T = iter.next();
+    const currValue: number = histo.get(curr) || 0;
+    histo.set(curr, currValue + 1);
+  }
+  return histo;
+}
+
+/**
  * Returns an iterator that yields only the elements in the provided iterator
  * that match the specified predicate. Does not throw an exception even if no
  * elements match.
