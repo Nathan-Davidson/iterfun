@@ -3,6 +3,8 @@ import {ArrayIter} from '../src/array_iter';
 import {Iter} from '../src/iter';
 import {counter} from '../src/iterfun';
 
+import {randInt} from './utils';
+
 import {expect} from 'chai';
 
 describe('counter tests', () => {
@@ -41,7 +43,3 @@ describe('counter tests', () => {
     expect(histoValuesSum).to.equal(testLen);
   });
 });
-
-function randInt(ceil: number): number {
-  return Math.floor(Math.random() * ceil);
-}

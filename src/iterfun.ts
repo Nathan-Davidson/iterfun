@@ -96,6 +96,32 @@ export function dropWhile<T>(
 }
 
 /**
+ * Separates elements of the iterator into groups defined by a provided
+ * function.
+ * @param {Iter<T>} iter the iterator to group the elements of
+ * @param {(arg: T) => K} grouper the function to use to divide elements into
+ * groups
+ * @return a Map of the elements in the iterator. Keys are the return values
+ * of the grouper function, values are lists of elements that produce that
+ * value when the function is applied to them.
+ */
+export function groupBy<T, K>(
+  iter: Iter<T>,
+  grouper: (arg: T) => K
+): Map<K, Array<T>> {
+  const groups: Map<K, Array<T>> = new Map();
+
+  while (iter.hasNext()) {
+    const curr: T = iter.next();
+    const group: K = grouper(curr);
+
+    groups.set(group, groups.get(group)?.concat([curr]) || [curr]);
+  }
+
+  return groups;
+}
+
+/**
  * Returns an iterator that returns values from the provided iterator as long
  * as they match the provided predicate. At the first element that does not
  * match the predicate, the returned iterator will signal that it has
