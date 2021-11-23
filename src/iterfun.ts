@@ -159,6 +159,23 @@ export function keepWhile<T>(
 }
 
 /**
+ * Identifies the maximum value returned by an iterator, as defined by a
+ * specified key function. If the provided iterator is empty, an exception is
+ * thrown. If there are multiple largest elements, the first is returned.
+ * @param {Iter<T>} iter the iterator to identify the maximum value of
+ * @param {T => number} keyfunc a function that maps the elements of the iterator
+ * to numbers, such that a smaller number represents a smaller element
+ * @return {T} the largest element returned by the input iterator
+ */
+export function max<T>(iter: Iter<T>, keyfunc: (arg: T) => number): T {
+  if (iter.hasNext()) {
+    return minmax(iter, keyfunc)[1];
+  } else {
+    throw new Error('no max of empty iterator');
+  }
+}
+
+/**
  * Maps the provided function (mapper) over an iterator. Returns a new iterator
  * that yields the values of the original iterator, but modified by the mapper.
  * @param {Iter<T1>} iter the iterator to map over
@@ -180,6 +197,63 @@ export function map<T1, T2>(iter: Iter<T1>, mapper: (arg: T1) => T2): Iter<T2> {
       return mapper(iter.current());
     },
   };
+}
+
+/**
+ * Identifies the minimum value returned by an iterator, as defined by a
+ * specified key function. If the provided iterator is empty, an exception is
+ * thrown. If there are multiple smallest elements, the first is returned.
+ * @param {Iter<T>} iter the iterator to identify the minimum value of
+ * @param {T => number} keyfunc a function that maps the elements of the iterator
+ * to numbers, such that a smaller number represents a smaller element
+ * @return {T} the smallest element returned by the input iterator
+ */
+export function min<T>(iter: Iter<T>, keyfunc: (arg: T) => number): T {
+  if (iter.hasNext()) {
+    return minmax(iter, keyfunc)[0];
+  } else {
+    throw new Error('no min of empty iterator');
+  }
+}
+
+/**
+ * Identifies the minimum and maximum values returned by an iterator, as defined
+ * by a specified key function. If the provided iterator is empty, an exception
+ * is thrown. The first extreme element is preferentially returned.
+ * @param {Iter<T>} iter the iterator to identify the minimum and maximum values
+ * of
+ * @param {T => number} keyfunc a function that maps the elements of the iterator
+ * to numbers, such that a smaller number represents a smaller element
+ * @return {[T, T]} the smallest and largest elements returned by the input
+ * iterator
+ */
+export function minmax<T>(iter: Iter<T>, keyfunc: (arg: T) => number): [T, T] {
+  if (!iter.hasNext()) {
+    throw new Error('no min or max of empty iterator');
+  }
+
+  let minVal: T = iter.next();
+  let maxVal: T = iter.next();
+
+  let minKey: number = keyfunc(minVal);
+  let maxKey: number = keyfunc(maxVal);
+
+  while (iter.hasNext()) {
+    const currVal: T = iter.next();
+    const currKey: number = keyfunc(currVal);
+
+    if (currKey > maxKey) {
+      maxVal = currVal;
+      maxKey = currKey;
+    }
+
+    if (currKey < minKey) {
+      minVal = currVal;
+      minKey = currKey;
+    }
+  }
+
+  return [minVal, maxVal];
 }
 
 /**
